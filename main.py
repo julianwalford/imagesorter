@@ -33,7 +33,7 @@ for key in bucket.list():
         s = key.get_contents_as_string()
         img = ExifFile(StringIO(s))
         datetime = img['Image DateTime']
-        re.search(
+#        re.search(
         import pdb;pdb.set_trace()
 
 
