@@ -35,7 +35,10 @@ for key in bucket.list():
         datetime = img['Image DateTime']
 #        re.search(
         import pdb;pdb.set_trace()
-
+    if key.name.endswith('RW2'):
+        key.get_contents_to_filename(basename)
+        date = subprocess.check_output(['exiftool','-d', '"%d %m %y"', '-DateTimeOriginal',basename])
+        print basename, date
 
     if newname:
         new_key = key.copy('julianwalford.photo.backup.grouped',newname)
