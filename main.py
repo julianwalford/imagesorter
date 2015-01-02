@@ -23,18 +23,18 @@ for key in bucket.list():
     print key
     basename = key.name.split('/')[-1]
     newname = ''
-    if key.name.endswith('JPG'): 
-        s = key.get_contents_as_string()
-        img = PIL.Image.open(StringIO(s))
-        exif = {PIL.ExifTags.TAGS[k]: v for k,v in img._getexif().items() if k in PIL.ExifTags.TAGS}
-        day,month,year = ExtractDateJpg(exif)
-        newname = year+"_"+month+"_"+day+'/'+basename
-    if key.name.endswith('TIF'):
-        s = key.get_contents_as_string()
-        img = ExifFile(StringIO(s))
-        datetime = img['Image DateTime']
-#        re.search(
-        import pdb;pdb.set_trace()
+##    if key.name.endswith('JPG'): 
+##         s = key.get_contents_as_string()
+##         img = PIL.Image.open(StringIO(s))
+##         exif = {PIL.ExifTags.TAGS[k]: v for k,v in img._getexif().items() if k in PIL.ExifTags.TAGS}
+##         day,month,year = ExtractDateJpg(exif)
+##         newname = year+"_"+month+"_"+day+'/'+basename
+##     if key.name.endswith('TIF'):
+##         s = key.get_contents_as_string()
+##         img = ExifFile(StringIO(s))
+##         datetime = img['Image DateTime']
+## #        re.search(
+##         import pdb;pdb.set_trace()
     if key.name.endswith('RW2'):
         key.get_contents_to_filename(basename)
         date = subprocess.check_output(['exiftool','-d', '%Y:%m:%d', '-DateTimeOriginal',basename])
