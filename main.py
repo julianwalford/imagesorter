@@ -2,7 +2,7 @@
 from cStringIO import StringIO
 from os.path import normpath,normcase
 import subprocess
-import PIL,PIL.Image, PIL.ExifTags, boto, re
+import PIL,PIL.Image, PIL.ExifTags, boto, re, os
 from EXIF import process_file as ExifFile
 
 def extractDateJpg(exif):
@@ -37,10 +37,15 @@ for key in bucket.list():
         import pdb;pdb.set_trace()
     if key.name.endswith('RW2'):
         key.get_contents_to_filename(basename)
-        date = subprocess.check_output(['exiftool','-d', '"%d %m %y"', '-DateTimeOriginal',basename])
-        print basename, date
+        date = subprocess.check_output(['exiftool','-d', '%Y:%m:%d', '-DateTimeOriginal',basename])
+	research = re.search('(?P<year>[0-9]{4}):(?P<month>[0-9]{2}):(?P<day>[0-9]{2})', date)
+	day, month, year = research.group('day'), research.group('month'), research.group('year')
+	print basename, day, month, year
+	newname = year+'_'+month+"_"+day+"/"+basename
+	os.remove(basename)
 
     if newname:
+	print "Moving",basename,"to",newname
         new_key = key.copy('julianwalford.photo.backup.grouped',newname)
         if new_key.exists:
             key.delete()
