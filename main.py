@@ -38,15 +38,15 @@ for key in bucket.list():
     if key.name.endswith('RW2'):
         key.get_contents_to_filename(basename)
         date = subprocess.check_output(['exiftool','-d', '%Y:%m:%d', '-DateTimeOriginal',basename])
-	research = re.search('(?P<year>[0-9]{4}):(?P<month>[0-9]{2}):(?P<day>[0-9]{2})', date)
-	day, month, year = research.group('day'), research.group('month'), research.group('year')
-	print basename, day, month, year
-	newname = year+'_'+month+"_"+day+"/"+basename
-	os.remove(basename)
-
-    if newname:
-	print "Moving",basename,"to",newname
-        new_key = key.copy('julianwalford.photo.backup.grouped',newname)
-        if new_key.exists:
-            key.delete()
+        research = re.search('(?P<year>[0-9]{4}):(?P<month>[0-9]{2}):(?P<day>[0-9]{2})', date)
+        day, month, year = research.group('day'), research.group('month'), research.group('year')
+        print basename, day, month, year
+        newname = year+'_'+month+"_"+day+"/"+basename
+        os.remove(basename)
     
+        if newname:
+            print "Moving",basename,"to",newname
+            new_key = key.copy('julianwalford.photo.backup.grouped',newname)
+            if new_key.exists:
+                key.delete()
+        
