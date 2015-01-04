@@ -21,24 +21,26 @@ print "Connected to S3"
 bucket = conn.get_bucket('julianwalford.photo.backup')
 for key in bucket.list():
     print key
-    basename = key.name.split('/')[-1]
+    name = key.name
+    basename = name.split('/')[-1]
     newname = ''
-##    if key.name.endswith('JPG'): 
+##    if name.endswith('JPG'): 
 ##         s = key.get_contents_as_string()
 ##         img = PIL.Image.open(StringIO(s))
 ##         exif = {PIL.ExifTags.TAGS[k]: v for k,v in img._getexif().items() if k in PIL.ExifTags.TAGS}
 ##         day,month,year = ExtractDateJpg(exif)
 ##         newname = year+"_"+month+"_"+day+'/'+basename
-##     if key.name.endswith('TIF'):
+##     if name.endswith('TIF'):
 ##         s = key.get_contents_as_string()
 ##         img = ExifFile(StringIO(s))
 ##         datetime = img['Image DateTime']
 ## #        re.search(
 ##         import pdb;pdb.set_trace()
-    if key.name.endswith('RW2'):
+    if name.upper().endswith('JPG') or name.upper().endswith('TIF'):
         key.get_contents_to_filename(basename)
         date = subprocess.check_output(['exiftool','-d', '%Y:%m:%d', '-DateTimeOriginal',basename])
         research = re.search('(?P<year>[0-9]{4}):(?P<month>[0-9]{2}):(?P<day>[0-9]{2})', date)
+        if not research: continue
         day, month, year = research.group('day'), research.group('month'), research.group('year')
         print basename, day, month, year
         newname = year+'_'+month+"_"+day+"/"+basename
