@@ -1,15 +1,14 @@
 import boto
+import os
 
 class NameCache:
 	def __init__(self,bucket):
 		self.cache = {}
 		for key in bucket.list():
 			if '/' in key.name:
-				date, name = key.name.split('/')
-				if '.' in name:
-					base, ext = name.split('.')
-				else:
-					base = name
+				date = os.path.dirname(key.name)
+				name = os.path.basename(key.name)
+				base, ext = os.path.splitext(name)
 				self.cache[base] = date
 
 	def get_date(self, name):
@@ -22,3 +21,4 @@ if __name__=="__main__":
 
 	bucket = conn.get_bucket('julianwalford.photo.backup.grouped')
 	n = NameCache(bucket)
+	print len(n.cache)
