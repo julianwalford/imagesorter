@@ -59,9 +59,9 @@ for key in bucket.list():
         if newname.endswith('TIF'):
             #check of RW2 key already exists -- skip move
             if new_bucket.get_key(newname.replace('TIF','RW2')):
-	    	print "Deleting duplicate key"
-		key.delete()
-		continue
+            print "Deleting duplicate key"
+            key.delete()
+            continue
             print "Moving",basename,"to",newname
             new_key = key.copy('julianwalford.photo.backup.grouped',newname)
             if new_key.exists:
