@@ -19,6 +19,7 @@ conn = boto.connect_s3()
 print "Connected to S3"
 
 bucket = conn.get_bucket('julianwalford.photo.backup')
+new_bucket = conn.get_bucket('julianwalford.photo.backup.grouped')
 for key in bucket.list():
     print key
     name = key.name
@@ -47,6 +48,12 @@ for key in bucket.list():
         os.remove(basename)
     
         if newname:
+            if newname.endswith('TIF'):
+				#check of RW2 key already exists -- skip move
+				if new_bucket.get_key(newname.replace('TIF','RW2')):
+					print "Deleting duplicate key"
+					key.delete()
+					continue
             print "Moving",basename,"to",newname
             new_key = key.copy('julianwalford.photo.backup.grouped',newname)
             if new_key.exists:
