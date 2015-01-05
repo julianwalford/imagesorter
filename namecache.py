@@ -4,9 +4,13 @@ class NameCache:
 	def __init__(self,bucket):
 		self.cache = {}
 		for key in bucket.list():
-			date, name = key.name.split('/')
-			base, ext = name.split('.')
-			self.cache[base] = date
+			if '/' in key.name:
+				date, name = key.name.split('/')
+				if '.' in name:
+					base, ext = name.split('.')
+				else:
+					base = name
+				self.cache[base] = date
 
 	def get_date(self, name):
 		return self.cache.get(name,'')
