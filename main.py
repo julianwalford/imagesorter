@@ -21,7 +21,7 @@ print "Connected to S3"
 
 bucket = conn.get_bucket('julianwalford.photo.backup')
 new_bucket = conn.get_bucket('julianwalford.photo.backup.grouped')
-cache = NameCache(new_bucket)
+#cache = NameCache(new_bucket)
 for key in bucket.list():
     print key
     name = key.name
@@ -39,17 +39,19 @@ for key in bucket.list():
 ##         datetime = img['Image DateTime']
 ## #        re.search(
 ##         import pdb;pdb.set_trace()
-    if name.upper().endswith('MOV'):
-        basename = os.path.basename(name.upper())
-        base, ext = os.path.splitext(basename)
-        date = cache.get_date(base)
-        if date:
-           newname = '/'.join([date, basename])
-    if name.upper().endswith('JPG') or name.upper().endswith('TIF'):
+##    if name.upper().endswith('MOV'):
+##        basename = os.path.basename(name.upper())
+##        base, ext = os.path.splitext(basename)
+##        date = cache.get_date(base)
+##        if date:
+##           newname = '/'.join([date, basename])
+    if name.upper().endswith('JPG'):
         key.get_contents_to_filename(basename)
         date = subprocess.check_output(['exiftool','-d', '%Y:%m:%d', '-DateTimeOriginal',basename])
         research = re.search('(?P<year>[0-9]{4}):(?P<month>[0-9]{2}):(?P<day>[0-9]{2})', date)
-        if not research: continue
+        if not research: 
+            print "No date information found"
+            continue
         day, month, year = research.group('day'), research.group('month'), research.group('year')
         print basename, day, month, year
         newname = year+'_'+month+"_"+day+"/"+basename
