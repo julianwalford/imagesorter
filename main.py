@@ -47,7 +47,11 @@ for key in bucket.list():
 ##           newname = '/'.join([date, basename])
     if name.upper().endswith('JPG'):
         key.get_contents_to_filename(basename)
-        date = subprocess.check_output(['exiftool','-d', '%Y:%m:%d', '-DateTimeOriginal',basename])
+        try:
+            date = subprocess.check_output(['exiftool','-d', '%Y:%m:%d', '-DateTimeOriginal',basename])
+        except subprocess.CalledProcessError, e:
+            print "Error extracting date"
+            continue
         research = re.search('(?P<year>[0-9]{4}):(?P<month>[0-9]{2}):(?P<day>[0-9]{2})', date)
         if not research: 
             print "No date information found"
