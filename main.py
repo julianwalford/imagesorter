@@ -51,10 +51,11 @@ for key in bucket.list():
         research = re.search('(?P<year>[0-9]{4}):(?P<month>[0-9]{2}):(?P<day>[0-9]{2})', date)
         if not research: 
             print "No date information found"
-            continue
-        day, month, year = research.group('day'), research.group('month'), research.group('year')
-        print basename, day, month, year
-        newname = year+'_'+month+"_"+day+"/"+basename
+            newname = 'ungrouped/'+basename
+        else:
+            day, month, year = research.group('day'), research.group('month'), research.group('year')
+            print basename, day, month, year
+            newname = year+'_'+month+"_"+day+"/"+basename
         os.remove(basename)
     
     if newname:
