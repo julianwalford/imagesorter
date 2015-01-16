@@ -23,6 +23,8 @@ bucket = conn.get_bucket('julianwalford.photo.backup')
 new_bucket = conn.get_bucket('julianwalford.photo.backup.grouped')
 #cache = NameCache(new_bucket)
 for key in bucket.list():
+    if key.size==0:
+        continue
     print key
     name = key.name
     basename = name.split('/')[-1]
@@ -45,6 +47,7 @@ for key in bucket.list():
 ##        date = cache.get_date(base)
 ##        if date:
 ##           newname = '/'.join([date, basename])
+    newname = 'ungrouped/'+basename
     if name.upper().endswith('JPG'):
         key.get_contents_to_filename(basename)
         try:
@@ -61,6 +64,16 @@ for key in bucket.list():
             print basename, day, month, year
             newname = year+'_'+month+"_"+day+"/"+basename
         os.remove(basename)
+    if name.upper().endswith('MP4'):
+        research = re.search('(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})',name)
+        if not research:
+            print "No date information found"
+            continue
+        else:
+            day, month, year = research.group('day'), research.group('month'), research.group('year')
+            print basename, day, month, year
+            newname = year+'_'+month+'_'+day+"/"+basename
+
     
     if newname:
         if newname.endswith('TIF'):
