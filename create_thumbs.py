@@ -46,6 +46,7 @@ if __name__=="__main__":
         thumb_key = boto.s3.key.Key(bucket_thumbs, name = new_key_name)
         thumb_key.key = new_key_name
         thumb_key.set_metadata('src',key.name)
+        thumb_key.make_public()
         thumb_key.set_contents_from_filename(thumb_name)
 
         #Clean up
