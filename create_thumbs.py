@@ -16,6 +16,7 @@ if __name__=="__main__":
     bucket = s3.get_bucket('julianwalford.photo.backup.grouped')
     bucket_thumbs = s3.get_bucket('julianwalford.photo.backup.thumbs')
 
+    devnull = open(os.devnull, 'w')
     #Start copying, key by key
     for key in bucket:
         keyname = key.name
@@ -30,17 +31,18 @@ if __name__=="__main__":
             continue
 
         #Download file and prepare to convert
+        print "Downloading",keyname,"to",basename
         key.get_contents_to_filename(basename)
         localbasename = basename
         if ext == '.RW2':
             localbasename = createTIFfromRAW(basename)
 
         #Resize
-        print "Resizing",keyname
-        subprocess.check_call(['convert','-thumbnail','x100',localbasename,thumb_name])
+        print "Resizing",localbasename,"to",thumb_name
+        subprocess.check_call(['convert','-thumbnail','x100',localbasename,thumb_name], stdout = devnull, stderr = devnull)
 
         #Upload
-        print "Uploading",thumb_name
+        print "Uploading",thumb_name,"to",new_key_name
         thumb_key = boto.s3.key.Key(bucket_thumbs, name = new_key_name)
         thumb_key.key = new_key_name
         thumb_key.set_metadata('src',key.name)
@@ -51,4 +53,4 @@ if __name__=="__main__":
         if localbasename != basename:
             os.remove(localbasename)
         os.remove(thumb_name)
-
+        devnull.close()
