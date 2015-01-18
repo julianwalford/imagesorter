@@ -53,4 +53,5 @@ if __name__=="__main__":
         if localbasename != basename:
             os.remove(localbasename)
         os.remove(thumb_name)
+        print
     devnull.close()
