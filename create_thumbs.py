@@ -18,17 +18,21 @@ if __name__=="__main__":
 
     #Start copying, key by key
     for key in bucket:
-        localkeyname = keyname = key.name
-        localbasename = basename = os.path.basename(keyname)
-        thumb_name = '100.'+localbasename
-        new_key_name = '100/'+localkeyname
+        keyname = key.name
+        basename = os.path.basename(keyname)
+        ext = os.path.splitext(basename)[-1]
+
+        thumb_name = '100.'+basename.replace(ext,'.jpg')
+        new_key_name = '100/'+keyname.replace(ext,'.jpg')
+
         if bucket_thumbs.get_key(new_key_name): 
             print "Found existing thumbnail for ",keyname
             continue
 
         #Download file and prepare to convert
         key.get_contents_to_filename(basename)
-        if basename.endswith('.RW2'):
+        localbasename = basename
+        if ext == '.RW2':
             localbasename = createTIFfromRAW(basename)
 
         #Resize
