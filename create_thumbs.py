@@ -48,5 +48,7 @@ if __name__=="__main__":
 
         #Clean up
         os.remove(basename)
+        if localbasename != basename:
+            os.remove(localbasename)
         os.remove(thumb_name)
 
