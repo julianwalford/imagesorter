@@ -41,8 +41,9 @@ if __name__=="__main__":
 
         #Upload
         print "Uploading",thumb_name
-        thumb_key = boto.s3.key.Key(bucket_thumbs)
+        thumb_key = boto.s3.key.Key(bucket_thumbs, name = new_key_name)
         thumb_key.key = new_key_name
+        thumb_key.set_metadata('src',key.name)
         thumb_key.set_contents_from_filename(thumb_name)
 
         #Clean up
