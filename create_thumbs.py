@@ -6,7 +6,8 @@ def createTIFfromRAW(basename):
     curdir = os.getcwd()
     dcraw = os.path.normpath(os.path.join(curdir,'..','dcraw','dcraw'))
     subprocess.check_call([dcraw,'-T',os.path.join(os.getcwd(),basename)])
-    return basename.replace('RW2','tiff')
+    ext = os.path.splitext(basename)[-1]
+    return basename.replace(ext,'.tiff')
 
 if __name__=="__main__":
     #Get connected
@@ -35,7 +36,7 @@ if __name__=="__main__":
         print "Downloading",keyname,"to",basename
         key.get_contents_to_filename(basename)
         localbasename = basename
-        if ext == '.RW2':
+        if ext in ['.RW2' ,'.CR2']:
             localbasename = createTIFfromRAW(basename)
 
         #Resize
