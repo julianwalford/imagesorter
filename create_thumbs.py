@@ -23,6 +23,7 @@ if __name__=="__main__":
         basename = os.path.basename(keyname)
         ext = os.path.splitext(basename)[-1]
 
+        if ext.lower() not in ['.rw2','.jpg','.tif','.tiff','.cr2']: continue
         thumb_name = '100.'+basename.replace(ext,'.jpg')
         new_key_name = '100/'+keyname.replace(ext,'.jpg')
 
